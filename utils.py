@@ -3,6 +3,7 @@ import shutil
 import numpy as np
 from tempfile import TemporaryFile
 import matplotlib.pyplot as plt
+from pathlib import Path
 np.set_printoptions(threshold=np.inf)
 
 
@@ -68,10 +69,33 @@ def countTimes():
         count = 0    
         for filename in os.listdir("DB{}".format(i)):
             count+=1
-        if count ==5:
+        if count !=109:
             print("DB{} has {} timesteps".format(i, count))
             done +=1
     print("{} are done cleaning.".format(done))
+
+def checkComplete():
+    i = 0
+    for filename in os.listdir(os.getcwd()):
+        if filename.find("DB{}".format(i)):
+            print(filename)
+        else:
+            continue
+        i+=1
+    print("done")
+
+def cleanup():
+    incomplete = []
+    out = ""
+    for i in range(400):
+        count= 0
+        for filename in os.listdir("DB{}".format(i)):
+            count+=1
+        if count < 108:
+            incomplete.append(i)
+    for i in incomplete:
+        out+="(rm DB{}/log.interFoam && cd DB{} && interFoam) & ".format(i, i)
+    return out
 
 def plotxyz(num, time, res = "high"):
     if res == "high":
@@ -128,7 +152,7 @@ def plotxy(res = "high"):
     plt.show()
 
 def saveallhighres():
-    for i in range(42,400):
+    for i in range(0,400):
         try:
             savehighres(i, "alpha.water", False)
         except ValueError:
@@ -143,10 +167,19 @@ def saveallhighres():
             pass
         
 def saveallLowres():
-    for i in range(29,400):
-        savelowres(i, "alpha.water", False)
-        savelowres(i, "p", False)
-        savelowres(i, "p_rgh", False)
+    for i in range(0,400):
+        try:
+            savelowres(i, "alpha.water", False)
+        except ValueError:
+            pass
+        try:
+            savelowres(i, "p", False)
+        except ValueError:
+            pass
+        try:
+            savelowres(i, "p_rgh", False)
+        except ValueError:
+            pass
         
     
 def savehighres(num, filename, plot):
@@ -161,7 +194,7 @@ def savehighres(num, filename, plot):
         with open("DB{}_highres/{}/{}".format(num, a, filename), 'r') as file:
             water = file.readlines()[23:1043]
             water = list(map(lambda x: float(x), water))
-            #print(water)
+            #print(water[0])
         file.close()
 
 
@@ -175,14 +208,14 @@ def savehighres(num, filename, plot):
             array[31-i-2][:16] = water[i*16+32+28 : i*16+16+32+28]
 
         for i in range(0,29):
-            array[31-i-2][17:19] = water[i*2+32+28+30*16:i*2+2+ 32+28+30*16]
+            array[31-i-2][16:18] = water[i*2+32+28+30*16:i*2+2+ 32+28+30*16]
 
         for i in range(0,29):
             array[31-i-2][18:] = water[i*14+32+28+30*16+30*2:i*14+14+32+28+30*16+30*2]
         if plot == True:
             plt.imshow(array)
-            plt.savefig("plots/{}_DB{}_highres_{}_{}.png".format(j,num, filename, a))
-        np.save("{}_highres/DB{}_highres_{}_@time = {}.npy".format(filename, num, filename, a), array)
+            plt.savefig("plots//highres{}_DB{}_highres_{}_{}.png".format(j,num, filename, a))
+        #np.save("{}_highres/DB{}_highres_{}_@time = {}.npy".format(filename, num, filename, a), array)
 
 def savelowres(num, filename, plot):
     for j in range(5, 501, 5):
@@ -192,11 +225,14 @@ def savelowres(num, filename, plot):
         else:
             a = j/100
 
+        if Path("{}_lowres/DB{}_{}_@time = {}.npy".format(filename, num, filename, a)).exists():
+            print("{} {} {} already exists".format(filename, num, a))
+            return
         
         with open("DB{}/{}/{}".format(num, a, filename), 'r') as file:
             water = file.readlines()[23:278]
             water = list(map(lambda x: float(x), water))
-            #print(water)
+            #print(water[0])
         file.close()
 
 
@@ -210,12 +246,12 @@ def savelowres(num, filename, plot):
             array[15-i-1][:8] = water[i*8+8+7:i*8+8+8+7]
 
         for i in range(0,14):
-            array[15-i-1][9] = water[i+8+7+15*8]
+            array[15-i-1][8] = water[i+8+7+15*8]
 
         for i in range(0,14):
             array[15-i-1][9:] = water[i*7+8+7+15*8+15: i*7+7+8+7+15*8+15]
         if plot == True:
             plt.imshow(array)
-            plt.savefig("plots/{}_DB{}_{}_{}.png".format(j,num, filename, a))
-        np.save("{}_lowres/DB{}_{}_@time = {}.npy".format(filename, num, filename, a), array)
+            plt.savefig("plots/lowres/{}_DB{}_{}_{}.png".format(j,num, filename, a))
+        #np.save("{}_lowres/DB{}_{}_@time = {}.npy".format(filename, num, filename, a), array)
    
