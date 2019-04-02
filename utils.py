@@ -1,10 +1,12 @@
 import os
+from os import listdir
 import shutil
 import numpy as np
 from tempfile import TemporaryFile
 import matplotlib.pyplot as plt
 from pathlib import Path
-np.set_printoptions(threshold=np.inf)
+import cv2
+
 
 
 
@@ -156,14 +158,17 @@ def saveallhighres():
         try:
             savehighres(i, "alpha.water", False)
         except ValueError:
+            print("{} water failed".format(i))
             pass
         try:
             savehighres(i, "p", False)
         except ValueError:
+            print("{} p failed".format(i))
             pass
         try:
             savehighres(i, "p_rgh", False)
         except ValueError:
+            print("{} p_rgh failed".format(i))
             pass
         
 def saveallLowres():
@@ -171,14 +176,17 @@ def saveallLowres():
         try:
             savelowres(i, "alpha.water", False)
         except ValueError:
+            print("{} water failed".format(i))
             pass
         try:
             savelowres(i, "p", False)
         except ValueError:
+            print("{} p failed".format(i))
             pass
         try:
             savelowres(i, "p_rgh", False)
         except ValueError:
+            print("{} p_rgh failed".format(i))
             pass
         
     
@@ -190,6 +198,9 @@ def savehighres(num, filename, plot):
         else:
             a = j/100
 
+        if Path("D:/openfoamData/{}_highres/DB{}_highres_{}_@time = {}.npy".format(filename, num, filename, a)).exists():
+            print("{} {} {} already exists".format(filename, num, a))
+            return
         
         with open("DB{}_highres/{}/{}".format(num, a, filename), 'r') as file:
             water = file.readlines()[23:1043]
@@ -215,7 +226,10 @@ def savehighres(num, filename, plot):
         if plot == True:
             plt.imshow(array)
             plt.savefig("plots//highres{}_DB{}_highres_{}_{}.png".format(j,num, filename, a))
-        #np.save("{}_highres/DB{}_highres_{}_@time = {}.npy".format(filename, num, filename, a), array)
+        np.save("D:/openfoamData/{}_highres/DB{}_highres_{}_@time = {}.npy".format(filename, num, filename, a), array)
+
+
+from scipy import misc
 
 def savelowres(num, filename, plot):
     for j in range(5, 501, 5):
@@ -225,17 +239,17 @@ def savelowres(num, filename, plot):
         else:
             a = j/100
 
-        if Path("{}_lowres/DB{}_{}_@time = {}.npy".format(filename, num, filename, a)).exists():
-            print("{} {} {} already exists".format(filename, num, a))
-            return
+##        if Path("D:/openfoamData/{}_lowres/DB{}_{}_@time = {}.npy".format(filename, num, filename, a)).exists():
+##            print("{} {} {} already exists".format(filename, num, a))
+##            return
         
         with open("DB{}/{}/{}".format(num, a, filename), 'r') as file:
             water = file.readlines()[23:278]
             water = list(map(lambda x: float(x), water))
             #print(water[0])
         file.close()
-
-
+        #print(Path("D:/openfoamtData/{}_lowres/DB{}_{}_@time = {}.npy".format(filename, num, filename, a)))
+        
         for i in range(1):
             array[15-i][:8] = water[i*8: i*8+8]
         
@@ -250,8 +264,142 @@ def savelowres(num, filename, plot):
 
         for i in range(0,14):
             array[15-i-1][9:] = water[i*7+8+7+15*8+15: i*7+7+8+7+15*8+15]
+        #array = misc.imresize(array, 2.0, 'bicubic')
+        #array = cv2.resize(array, (32, 32), interpolation = cv2.INTER_CUBIC)
         if plot == True:
             plt.imshow(array)
             plt.savefig("plots/lowres/{}_DB{}_{}_{}.png".format(j,num, filename, a))
-        #np.save("{}_lowres/DB{}_{}_@time = {}.npy".format(filename, num, filename, a), array)
-   
+        
+        np.save("D:/openfoamData/{}_lowres/DB{}_{}_@time = {}.npy".format(filename, num, filename, a), array)
+
+import h5py
+
+def saveh5():
+    temp = 0
+    waterLowres = []
+    waterHighres = []
+    pLowres = []
+    pHighres = []
+    p_rghLowres = []
+    p_rghHighres = []
+
+    for file in listdir("D:/openfoamData/alpha.water_highres"):
+        temp = np.load("D:/openfoamData/alpha.water_highres/" + file)
+        print(file)
+        print(temp.shape)
+        temp = temp.reshape(32, 32, 1)
+        waterHighres.append(temp)
+        
+    for file in listdir("D:/openfoamData/alpha.water_lowres"):
+        temp = np.load("D:/openfoamData/alpha.water_lowres/" + file)
+        print(file)
+        print(temp.shape)
+        temp = temp.reshape(32, 32, 1)
+        waterLowres.append(temp)
+
+    for file in listdir("D:/openfoamData/p_highres"):
+        temp = np.load("D:/openfoamData/p_highres/" + file)
+        temp = temp.reshape(32, 32, 1)
+        pHighres.append(temp)
+        
+    for file in listdir("D:/openfoamData/p_lowres"):
+        temp = np.load("D:/openfoamData/p_lowres/" + file)
+        temp = temp.reshape(32, 32, 1)
+        pLowres.append(temp)
+
+    for file in listdir("D:/openfoamData/p_rgh_highres"):
+        temp = np.load("D:/openfoamData/p_rgh_highres/" + file)
+        temp = temp.reshape(32, 32, 1)
+        p_rghHighres.append(temp)
+        
+    for file in listdir("D:/openfoamData/p_rgh_lowres"):
+        temp = np.load("D:/openfoamData/p_rgh_lowres/" + file)
+        temp = temp.reshape(32, 32, 1)
+        p_rghLowres.append(temp)
+
+    waterLowres = np.asarray(waterLowres)
+    waterHighres = np.asarray(waterHighres)
+    h5water = h5py.File("water_large.h5", "w")
+    h5water.create_dataset("highres", data = waterHighres)
+    h5water.create_dataset("lowres", data = waterLowres)
+    h5water.close()
+    
+    pLowres = np.asarray(pLowres)
+    pHighres = np.asarray(pHighres)
+    h5p = h5py.File("p_large.h5", "w")
+    h5p.create_dataset("highres", data = pHighres)
+    h5p.create_dataset("lowres", data = pLowres)
+    h5p.close()
+    
+    p_rghLowres = np.asarray(p_rghLowres)
+    p_rghHighres = np.asarray(p_rghHighres)
+    h5p_rgh = h5py.File("p_rgh_large.h5", "w")
+    h5p_rgh.create_dataset("highres", data = p_rghHighres)
+    h5p_rgh.create_dataset("lowres", data = p_rghLowres)
+    h5p_rgh.close()
+    
+
+def saveh5small():
+    temp = 0
+    waterLowres = []
+    waterHighres = []
+    pLowres = []
+    pHighres = []
+    p_rghLowres = []
+    p_rghHighres = []
+
+    for file in listdir("D:/openfoamData/alpha.water_highres_small"):
+        temp = np.load("D:/openfoamData/alpha.water_highres_small/" + file)
+        print(file)
+        print(temp.shape)
+        temp = temp.reshape(32, 32, 1)
+        waterHighres.append(temp)
+        
+    for file in listdir("D:/openfoamData/alpha.water_lowres_small"):
+        temp = np.load("D:/openfoamData/alpha.water_lowres_small/" + file)
+        print(file)
+        print(temp.shape)
+        temp = temp.reshape(32, 32, 1)
+        waterLowres.append(temp)
+
+    for file in listdir("D:/openfoamData/p_highres_small"):
+        temp = np.load("D:/openfoamData/p_highres_small/" + file)
+        temp = temp.reshape(32, 32, 1)
+        pHighres.append(temp)
+        
+    for file in listdir("D:/openfoamData/p_lowres_small"):
+        temp = np.load("D:/openfoamData/p_lowres_small/" + file)
+        temp = temp.reshape(32, 32, 1)
+        pLowres.append(temp)
+
+    for file in listdir("D:/openfoamData/p_rgh_highres_small"):
+        temp = np.load("D:/openfoamData/p_rgh_highres_small/" + file)
+        temp = temp.reshape(32, 32, 1)
+        p_rghHighres.append(temp)
+        
+    for file in listdir("D:/openfoamData/p_rgh_lowres_small"):
+        temp = np.load("D:/openfoamData/p_rgh_lowres_small/" + file)
+        temp = temp.reshape(32, 32, 1)
+        p_rghLowres.append(temp)
+
+    waterLowres = np.asarray(waterLowres)
+    waterHighres = np.asarray(waterHighres)
+    h5water = h5py.File("water_small.h5", "w")
+    h5water.create_dataset("highres", data = waterHighres)
+    h5water.create_dataset("lowres", data = waterLowres)
+    h5water.close()
+    
+    pLowres = np.asarray(pLowres)
+    pHighres = np.asarray(pHighres)
+    h5p = h5py.File("p_small.h5", "w")
+    h5p.create_dataset("highres", data = pHighres)
+    h5p.create_dataset("lowres", data = pLowres)
+    h5p.close()
+    
+    p_rghLowres = np.asarray(p_rghLowres)
+    p_rghHighres = np.asarray(p_rghHighres)
+    h5p_rgh = h5py.File("p_rgh_small.h5", "w")
+    h5p_rgh.create_dataset("highres", data = p_rghHighres)
+    h5p_rgh.create_dataset("lowres", data = p_rghLowres)
+    h5p_rgh.close()
+    
