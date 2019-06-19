@@ -403,3 +403,89 @@ def saveh5small():
     h5p_rgh.create_dataset("lowres", data = p_rghLowres)
     h5p_rgh.close()
     
+    
+    ##new stuff
+import re
+from functools import reduce
+
+
+def getVertices(File):
+    points = []
+    line = ""
+    while line != "vertices\n":
+        line = File.readline()
+    line = File.readline()
+    while line != ");\n":
+        line = File.readline()
+        if len(line)>4: points.append(eval(line[4:].replace(" ", ",")))
+    return points
+
+
+def getBlocks(File, points):
+    blocks = []
+    line = ""
+    while line != "blocks\n":
+        line = File.readline()
+    line= File.readline()
+    while line != ");\n":
+        line = File.readline()
+        filtered = re.split('\(|\)', line[4:])
+        if len(filtered)<4: break
+        Vertices = eval("[" + filtered[1].replace(" ", ",") + "]")
+        Vertices = list(map(lambda x: points[x], Vertices))
+        Density = eval("[" + filtered[3].replace(" ", ",") + "]")
+        blocks.append((Vertices, Density))
+    return blocks
+
+
+def xyzmax(pointList):
+    x = max(pointList, key = lambda x: x[0])[0]
+    y = max(pointList, key = lambda x: x[1])[1]
+    z = max(pointList, key = lambda x: x[2])[2]
+    return [x,y,z]
+
+
+def blockStart(pointList):
+    x = min(pointList, key = lambda x: x[0])[0]
+    y = max(pointList, key = lambda x: x[1])[1]
+    z = min(pointList, key = lambda x: x[2])[2]
+    return [x,y,z]
+
+
+def buildBlock(block, File):
+    finalblock = np.empty(block[1])
+    finalblock = finalblock.reshape(block[1][1], block[1][0], block[1][2])
+    for k in range(block[1][2]):
+        for i in reversed(range(block[1][1])):
+            for j in range(block[1][0]):
+                finalblock[i][j][k] = float(File.readline())
+    return finalblock
+
+
+res = np.array([16,16,1])
+
+final = np.zeros([16,16,1])
+
+asdf = open("DB360/0.1/alpha.water", "r")
+fdsa = open("DB360/system/blockMeshDict", "r")
+
+points = getVertices(fdsa)
+XYZmax = np.array(xyzmax(points))
+mul = np.divide(res, XYZmax)
+print(mul)
+mul = list(map(int, mul))
+points = list(map(lambda x: (x[0]*mul[0], x[1]*mul[1], x[2]*mul[2]), points))
+points = [map(int, sub) for sub in points]
+points = list(map(list, points))
+blocks = getBlocks(fdsa, points)
+for i in range(23):
+    discard = asdf.readline()
+for i in range(len(blocks)):
+    st = blockStart(blocks[i][0])
+    st[0]=res[0]-st[0]
+    print(st)
+    
+    blocks[i] = buildBlock(blocks[i], asdf)
+    shp = blocks[i].shape
+    #print(shp)
+    #final[st[0]:st[0]+shp[0], st[1]:st[1]+shp[1], st[2]:st[2]+shp[2]] = blocks[i]
