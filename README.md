@@ -33,5 +33,14 @@ Block List for a sample blockMeshDict
 
 Each block consists of a set of vertices and a set of block densities for the x,y,z directions.
 
+#### Data
+The data comes from files in each timestep directory that the solver produces. This comes in the form of a list of points that must
+be assembled from left to right, bottom to top. This makes the assembly slightly more complicated.
+
+For example, if we had a block of 8 points, it would be assembled like this:
+
+![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/block example.png "Block Example")
+
+
 Each case was ran for 5 seconds, with timesteps of 0.05, and both a highres and lowres version. 400
 different cases were ran, each with two versions of 101 data points each, resulting in 80,800 total data points.
