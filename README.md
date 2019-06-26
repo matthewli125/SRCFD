@@ -2,7 +2,7 @@
 #### Matthew Li
 mwl5628@psu.edu
 
-Hello! 
+Hello there! 
 
 This repo contains all the components for a Super Resolution in Computation Fluid Dynamics project, with data processing as well
 as network training and testing. CFD is very important in the field of engineering, but solving CFD problems can be very computationally
@@ -12,5 +12,19 @@ proposes a novel method of solving CFD problems by applying a neural network sup
 
 ### OpenFOAM
 
-CFD data was gathered from simulations run in the OpenFOAM software platform. The data used in this project comes from the dambreak
-tutorial, which was modified to have uniform point density as well as randomized fluid properties. Each 
+CFD data was gathered from simulations run in the OpenFOAM software platform. The data used in this project comes from the OpenFOAM dambreak tutorial (https://cfd.direct/openfoam/user-guide/v6-dambreak/), which was modified to have uniform point density as well as randomized fluid properties.
+
+#### OpenFOAM file format
+The most essential files for an OpenFOAM simulation are the blockMeshDict, controlDict, as well as g, transportProperties, and turbulenceProperties. blockMeshDict defines the geometry of the simulation, controlDict defines the time properties, and other 3 modify
+fluid properties. An example folder has been included that contains all of these files and more.
+
+#### BlockMeshDict
+The geometry of an OpenFOAM simulation is made up of rectangular blocks, defined by a set of vertices. Each block contains a set of vertices as well and a point density.
+
+Vertices List for a sample blockMeshDict
+![alt text](https://github.com/matthewli125/SRCFD/readme_imgs/vertices.png "Vertices List")
+Block List for a sample blockMeshDict
+![alt text](https://github.com/matthewli125/SRCFD/readme_imgs/blocks.png "Block List")
+
+Each case was ran for 5 seconds, with timesteps of 0.05, and both a highres and lowres version. 400
+different cases were ran, each with two versions of 101 data points each, resulting in 80,800 total data points.
