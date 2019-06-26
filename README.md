@@ -22,9 +22,9 @@ fluid properties. An example folder has been included that contains all of these
 The geometry of an OpenFOAM simulation is made up of rectangular blocks, defined by a set of vertices. Each block contains a set of vertices as well and a point density.
 
 Vertices List for a sample blockMeshDict
-![alt text](https://github.com/matthewli125/SRCFD/readme_imgs/vertices.png "Vertices List")
+![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/vertices.png "Vertices List")
 Block List for a sample blockMeshDict
-![alt text](https://github.com/matthewli125/SRCFD/readme_imgs/blocks.png "Block List")
+![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/blocks.png "Block List")
 
 Each case was ran for 5 seconds, with timesteps of 0.05, and both a highres and lowres version. 400
 different cases were ran, each with two versions of 101 data points each, resulting in 80,800 total data points.
