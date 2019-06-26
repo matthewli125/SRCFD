@@ -39,7 +39,7 @@ be assembled from left to right, bottom to top. This makes the assembly slightly
 
 For example, if we had a block of 8 points, it would be assembled like this:
 
-![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/"block_example".png "Block Example")
+![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/block_example.png "Block Example")
 
 
 Each case was ran for 5 seconds, with timesteps of 0.05, and both a highres and lowres version. 400
