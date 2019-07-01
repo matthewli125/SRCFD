@@ -12,7 +12,7 @@ proposes a novel method of solving CFD problems by applying a neural network sup
 
 ### OpenFOAM
 
-![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/openfoam.png "OpenFOAM")
+![alt text](readme_imgs/openfoam.png "OpenFOAM")
 
 CFD data was gathered from simulations run in the OpenFOAM software platform. The data used in this project comes from the OpenFOAM dambreak tutorial (https://cfd.direct/openfoam/user-guide/v6-dambreak/), which was modified to have uniform point density as well as randomized fluid properties.
 
@@ -25,11 +25,11 @@ The geometry of an OpenFOAM simulation is made up of rectangular blocks, defined
 
 Vertices List for a sample blockMeshDict
 
-![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/vertices.png "Vertices List")
+![alt text](readme_imgs/vertices.png "Vertices List")
 
 Block List for a sample blockMeshDict
 
-![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/blocks.png "Block List")
+![alt text](readme_imgs/blocks.png "Block List")
 
 Each block consists of a set of vertices and a set of block densities for the x,y,z directions.
 
@@ -39,7 +39,7 @@ be assembled from left to right, bottom to top. This makes the assembly slightly
 
 For example, if we had a block of 8 points, it would be assembled like this:
 
-![alt text](https://github.com/matthewli125/SRCFD/blob/master/readme_imgs/block_example.png "Block Example")
+![alt text](readme_imgs/block_example.png "Block Example")
 
 Blocks can have an arbitrary amount of points, and each scene can have an arbitrary amount of points, so processing the CFD data
 into a usable format for the neural net was a nontrivial problem. The algorithm for doing this can be found in utils.py.
@@ -49,3 +49,11 @@ into a usable format for the neural net was a nontrivial problem. The algorithm 
 
 Each case was ran for 5 seconds, with timesteps of 0.05, and both a highres and lowres version. 400
 different cases were ran, each with two versions of 101 data points each, resulting in 80,800 total data points.
+
+##### Low-res vs High-res data
+
+|![alt text](plots/lowres/10_DB360_alpha.water_0.1.png "Block List")| ![alt text](plots/highres/10_DB360_highres_alpha.water_0.1.png "Block List")|
+
+
+### The Neural Network
+The network architecture of this project has not been 100% finalized yet, but so far we have been experimenting with existing image SR CNN architectures. The one used currently as of \[7/1/2019\] is FSRCNN from the Chinese University of Hong Kong (http://mmlab.ie.cuhk.edu.hk/projects/FSRCNN.html) which has been very straightforward to implement. The FSRCNN was implemented in Keras with the Tensorflow backend. This code can be found in the file FSRCNN.py.
