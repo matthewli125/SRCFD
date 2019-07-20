@@ -53,7 +53,7 @@ different cases were ran, each with two versions of 101 data points each, result
 ##### Low-res vs High-res data
 
 |![lowres](plots/lowres/10_DB360_alpha.water_0.1.png "Block List")| ![highres](plots/highres/10_DB360_highres_alpha.water_0.1.png "Block List")|
-|--------------|----------------|
+|-|-|
 
 
 ### The Neural Network
