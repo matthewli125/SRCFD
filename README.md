@@ -19,7 +19,7 @@ intensive. It is a problem that cannot be easily scaled to more CPU or GPU cores
 
 [The Neural Network](#NN)
 
-<a name="update"</a>
+<a name="update"></a>
 ## Updates
 
 #### 7/20/2019
@@ -28,12 +28,11 @@ intensive. It is a problem that cannot be easily scaled to more CPU or GPU cores
 Began working on "over time" SRCFD. I theorized that feeding a neural network multiple frames of data at a time may produce better results, since multiple frames may allow a NN to extrapolate more information about the fluid's general behavior. A
 plot of such a 3D array will be attached below.
 
-![voxels](readme_imgs/voxel.png)
-
 I am also interested in 3D-printing a model of such a fluid sim over time as a neat visualization of my work. I need to convert a numpy voxel grid to an STL compatible mesh. I used the marching cubes algorithm from SKlearn and got this as a 
 result. I think it looks quite neat but I feel like not having cubes makes it lose the sense of "resolution". Will experiment further.
 
-![mesh](readme_imgs/mesh.png)
+|![mesh](readme_imgs/mesh.png)|![voxels](readme_imgs/voxel.png)|
+|-|-|
 
 
 #### 7/2/2019
