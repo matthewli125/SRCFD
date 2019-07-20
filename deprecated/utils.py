@@ -8,7 +8,9 @@ from pathlib import Path
 import cv2
 
 
-
+# This is the old utils code that I wrote a while ago. A lot of the functions in here were rushed and basically hard-coded,
+# and have been replace with much better code in the new utils.py file. I kept this file here to serve as a point of comparison
+# to my new code as well as to show an example of poor coding practices. 
 
 
 def removelogs(res):
