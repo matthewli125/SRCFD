@@ -8,6 +8,11 @@ This repo contains all the components for a Super Resolution in Computation Flui
 
 CFD is very important in the field of engineering, but solving CFD problems can be very computationally
 intensive. It is a problem that cannot be easily scaled to more CPU or GPU cores making it very difficult to parallelize. This project proposes a novel method of solving CFD problems by applying a neural network super-resolution to lower resolution CFD simulations.
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Table of Contents
 
@@ -18,6 +23,14 @@ intensive. It is a problem that cannot be easily scaled to more CPU or GPU cores
 [Data](#data)
 
 [The Neural Network](#NN)
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
 
 <a name="update"></a>
 ## Updates
@@ -39,7 +52,11 @@ result. I think it looks quite neat but I feel like not having cubes makes it lo
 Started work with 3D dambreak. Modified the blockMeshDict file of one case to be extended in the Z direction. Plotted results in matplotlib and made gifs; can be found in the gifs folder. Produced some unexpected results. Running the interFoam solver took much much longer than the 2D case.
 
 
-
+<br>
+<br>
+<br>
+<br>
+<br>
 
 <a name="openfoam"></a>
 ## The OpenFOAM CFD platform
@@ -65,6 +82,12 @@ Block List for a sample blockMeshDict
 
 Each block consists of a set of vertices and a set of block densities for the x,y,z directions.
 
+<br>
+<br>
+<br>
+<br>
+<br>
+
 <a name="data"></a>
 ## Data
 The data comes from files in each timestep directory that the solver produces. This comes in the form of a list of points that must
@@ -88,7 +111,12 @@ different cases were ran, each with two versions of 101 data points each, result
 |![lowres](plots/lowres/10_DB360_alpha.water_0.1.png "Block List")| ![highres](plots/highres/10_DB360_highres_alpha.water_0.1.png "Block List")|
 |-|-|
 
+<br>
+<br>
+<br>
+<br>
+<br>
+
 <a name="NN"></a>
 ## The Neural Network
-The network architecture of this project has not been 100% finalized yet, but so far we have been experimenting with existing image SR CNN architectures. The one used currently as of \[7/1/2019\] is FSRCNN from the Chinese University of Hong Kong (http://mmlab.ie.cuhk.edu.hk/projects/FSRCNN.html) which has been very straightforward to implement. The FSRCNN was implemented in Keras with the Tensorflow backend. This code can be found in the file FSRCNN.py.
-enen
+The network architecture of this project has not been 100% finalized yet, but so far we have been experimenting with existing image SR CNN architectures. The one used currently as of \[7/1/2019\] is FSRCNN from the Chinese University of Hong Kong (http://mmlab.ie.cuhk.edu.hk/projects/FSRCNN.html) which has been very straightforward to implement. The FSRCNN was implemented in Keras with the Tensorflow backend. This code, along with more information, can be found in the neural net folder.
