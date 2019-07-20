@@ -31,7 +31,7 @@ plot of such a 3D array will be attached below.
 I am also interested in 3D-printing a model of such a fluid sim over time as a neat visualization of my work. I need to convert a numpy voxel grid to an STL compatible mesh. I used the marching cubes algorithm from SKlearn and got this as a 
 result. I think it looks quite neat but I feel like not having cubes makes it lose the sense of "resolution". Will experiment further.
 
-|![mesh](readme_imgs/mesh.png)|![voxels](readme_imgs/voxel.png)|
+|![voxels](readme_imgs/voxel.png)|![mesh](readme_imgs/mesh.png)|
 |-|-|
 
 
