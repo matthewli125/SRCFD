@@ -12,7 +12,7 @@ proposes a novel method of solving CFD problems by applying a neural network sup
 
 ### OpenFOAM
 
-![alt text](readme_imgs/openfoam.png "OpenFOAM")
+![openfoam](readme_imgs/openfoam.png "OpenFOAM")
 
 CFD data was gathered from simulations run in the OpenFOAM software platform. The data used in this project comes from the OpenFOAM dambreak tutorial (https://cfd.direct/openfoam/user-guide/v6-dambreak/), which was modified to have uniform point density as well as randomized fluid properties.
 
@@ -25,11 +25,11 @@ The geometry of an OpenFOAM simulation is made up of rectangular blocks, defined
 
 Vertices List for a sample blockMeshDict
 
-![alt text](readme_imgs/vertices.png "Vertices List")
+![lil uzi vert](readme_imgs/vertices.png "Vertices List")
 
 Block List for a sample blockMeshDict
 
-![alt text](readme_imgs/blocks.png "Block List")
+![blocks](readme_imgs/blocks.png "Block List")
 
 Each block consists of a set of vertices and a set of block densities for the x,y,z directions.
 
@@ -39,7 +39,7 @@ be assembled from left to right, bottom to top. This makes the assembly slightly
 
 For example, if we had a block of 8 points, it would be assembled like this:
 
-![alt text](readme_imgs/block_example.png "Block Example")
+![example](readme_imgs/block_example.png "Block Example")
 
 Blocks can have an arbitrary amount of points, and each scene can have an arbitrary amount of points, so processing the CFD data
 into a usable format for the neural net was a nontrivial problem. The algorithm for doing this can be found in utils.py.
@@ -52,7 +52,7 @@ different cases were ran, each with two versions of 101 data points each, result
 
 ##### Low-res vs High-res data
 
-|![alt text](plots/lowres/10_DB360_alpha.water_0.1.png "Block List")| ![alt text](plots/highres/10_DB360_highres_alpha.water_0.1.png "Block List")|
+|![lowres](plots/lowres/10_DB360_alpha.water_0.1.png "Block List")| ![highres](plots/highres/10_DB360_highres_alpha.water_0.1.png "Block List")|
 |--------------|----------------|
 
 
