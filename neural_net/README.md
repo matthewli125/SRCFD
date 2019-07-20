@@ -16,4 +16,4 @@ This architecture can achieve high accuracy at faster speeds, and requires no da
 architecture, which requires the input image to be bicubically upsampled. FSRCNN is fast, accurate, and requires less work on my
 part, making it an ideal choice.
 
-![FSRCNN](readme_imgs/FSRCNN.png)
+![FSRCNN](../readme_imgs/FSRCNN.png)
