@@ -10,11 +10,11 @@ additional information will be in this readme as well. First, I will explain som
 OpenFOAM has a nested file structure for each simulation case. Within the folder for an individual simulation, there will be
 a folder for each timestep, a folder for constant properties, and a folder for system properties, like this:
 
-![case struct](utilities/imgs/filestructure.png)
+![case struct](../utilities/imgs/filestructure.png)
 
-I then put all the case directories in a single directory like this:
+The name of the case is just a number, and each case has a lowres and a highres version. I put all the case directories in a single directory like this:
 
-![whole folder](dirstructure.png)
+![whole folder](../utilities/imgs/dirstructure.png)
 
 __This is important because some of the code in this folder will not work if the files are not organized in this way!__
 <br>
@@ -35,3 +35,8 @@ _[case number] [ _highres(leave empty if lowres)]-[resolution]-[data file]-[time
 
 The jpg files also have an extra integer number before the file extension that signifies order, as these images are intended
 for animating in order.
+
+## File details
+<br>
+<br>
+###
