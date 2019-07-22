@@ -13,7 +13,7 @@ highresdst = "D:\\openfoamData\\dambreak_cases\\DB{}_highres"
 
 # modifies the size and shape of the water, the viscosity of the water, the strength of gravity, as well as nu, rho, and sigma
 # properties of both lowres and highres cases. Set the path and destinations to what is desired.
-def randomproperties():
+def makedirs():
     for i in range(400):
         
 
