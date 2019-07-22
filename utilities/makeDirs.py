@@ -11,21 +11,8 @@ lowresdst = "D:\\openfoamData\\dambreak_cases\\DB{}"
 highrespath = "C:\\Users\\Matthew Li\\AppData\\Local\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\matthewli125\\OpenFOAM\\matthewli125-v1812\\run\\dambreakhighres\\damBreak"
 highresdst = "D:\\openfoamData\\dambreak_cases\\DB{}_highres"
 
-
-
-def blockmeshdict():
-    for i in range(400):
-        with open(highresdst.format(i) + "\\system\\blockMeshDict", 'r') as file:
-            blockMeshDict = file.readlines()
-
-        blockMeshDict[51] = "    hex (5 6 10 9 17 18 22 21) (2 30 1) simpleGrading (1 2 1)"
-        
-
-        with open(highresdst.format(i) + "\\system\\blockMeshDict", 'w') as file:
-            file.writelines(blockMeshDict)
-        #a = input("pause")
-
-
+# modifies the size and shape of the water, the viscosity of the water, the strength of gravity, as well as nu, rho, and sigma
+# properties of both lowres and highres cases. Set the path and destinations to what is desired.
 def randomproperties():
     for i in range(400):
         
