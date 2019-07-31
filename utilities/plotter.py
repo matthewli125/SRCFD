@@ -14,12 +14,15 @@ def plot2d(filelist, savepth):
         plt.close()
         count+=1
 
-def plot3d(filelist, savepth, color):
+def plot3d(filelist, savepth, color, transpose): #transpose (2,1,0) for 3d, (2,0,1) for over_time
     count = 0
     for file in sortbyname([i.replace("\n", "") for i in filelist]):
         fig = plt.figure()
         ax = fig.gca(projection='3d')
-        a = np.load(file).transpose(2,1,0)
+        a = np.load(file).transpose(transpose)
+        for i in [(x,y,z) for x in range(a.shape[0]) for y in range(a.shape[1]) \
+                                                    for z in range(a.shape[2])]:
+            a[i] = 0 if a[i] < 0.001 else 1
         ax.voxels(np.flip(a,2), facecolors=color, edgecolor='black')
         plt.savefig(savepth+"{}-3D-{}.jpg".format(path.basename(file).replace(".npy", ""), count))
         plt.close()

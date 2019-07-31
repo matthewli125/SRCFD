@@ -13,12 +13,12 @@ from time import sleep
 
 # Modify these global vars to the paths and files that you want--PTH is the
 # folder with the cases and PTHd is a list of all the folders in PTH
-PTHd = []
-PTH = "D:/openfoamData/ff"
+PTH = "D:/openfoamData/dambreak_cases"
+PTHd = listdir(PTH)
 msh = "/system/blockMeshDict"
 HRSAVEPTH = "D:/openfoamData/newcodedata/highres/"
 LRSAVEPTH = "D:/openfoamData/newcodedata/lowres/"
-files = ["alpha.water","p", "p_rgh"]
+FILES = ["alpha.water","p", "p_rgh"]
 
 def copyfiles(): #copy alpha.water.orig and blockMeshDict to all directories
     file1 = "alpha.water.orig"
@@ -146,7 +146,7 @@ def buildall(res, high, savepth):
     for i in sorted(filter(filFunc, PTHd), key= lambda x: int(x.split("_")[0])):
         print("doing case {} {}\n".format(i, "highres" if high else "lowres"))
         for j in tqdm(list(filter(lambda x:x[0].isdigit(),listdir(PTH+"/"+i)))):
-            for k in filter(lambda x: x in files, listdir(PTH+"/"+i+"/"+j)):
+            for k in filter(lambda x: x in FILES, listdir(PTH+"/"+i+"/"+j)):
                 try:
                     arr = buildarr(res, PTH+"/"+i+"/"+j+"/"+k, PTH+"/"+i+msh)
                     np.save(savepth+"{}-{}x{}x{}-{}-{}.npy".format \
@@ -166,7 +166,6 @@ def saveh5(lrSavepth, hrSavepth):
     hrSortList = sortbyname(listdir(hrSavepth))
     Data = {}
     for i in tqdm(files):
-        print(i)
         h5file = h5py.File("newcodeh5data/{}.h5".format(i), "w")
         h5file.create_dataset("lowres", data=[np.load(lrSavepth+X) for X in \
                 tqdm(list(filter(lambda x: i == x.split("-")[2], lrSortList)))])
@@ -175,26 +174,29 @@ def saveh5(lrSavepth, hrSavepth):
         h5file.close()
 
 #stacks 2d arrays into a single 3d array that represents change over time
-def overtime(res, files, path, color):
+def overtime(res, files):
     overtime_arr = []
-    for i in sortbyname(files):
-        a = np.load(path + i)
-        a = np.squeeze(a)
-        for i in range(res[0]):
-            for j in range(res[1]):
-                if a[i][j] < 0.0001:
-                    a[i][j] = 0
-                else:
-                    a[i][j] = 1
+    for i in files:
+        print(i)
+        a = np.load(i)
         overtime_arr.append(a)
-    overtime_arr = np.flip(np.array(overtime_arr),1)
-    overtime_arr = overtime_arr.transpose(2,0,1)
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    ax.voxels(overtime_arr, facecolors=color, edgecolor='black')
-    ax.set_xlim(0,32)
-    ax.set_ylim(0,32)
-    ax.set_zlim(0,32)
-    plt.show()
-    plt.close()
-    return overtime_arr
+    return (np.array(overtime_arr))
+
+
+def overtime_all(OT_lrPth, OT_hrPth, interval, hres=[32,32,1], lres=[16,16,1]):
+    lr = [LRSAVEPTH + i for i in sortbyname(listdir(LRSAVEPTH))]
+    hr = [HRSAVEPTH + i for i in sortbyname(listdir(HRSAVEPTH))]
+    for file in FILES:
+        recursive_build(list(filter(lambda x: file == x.split("-")[2], lr)), interval, lres, OT_lrPth, file, 0)
+        recursive_build(list(filter(lambda x: file == x.split("-")[2], hr)), interval, hres, OT_hrPth, file, 0)
+
+
+def recursive_build(lst, interval, res, savepth, file, i):
+    if len(lst) < 1: return
+    np.save("{}/{}x{}x{}-{}-{}_{}.npy".format(savepth,res[0],res[1],res[2], \
+                            file,i,i+interval), overtime(res, lst[0:interval]))
+    recursive_build(lst[interval:], interval, res, savepth, file, i+interval)
+
+overtime_all("D:/openfoamData/overtime_data/lowres/", "D:/openfoamData/overtime_data/highres/", 50)
+#buildall([32,32,1], True, "D:/openfoamData/newcodedata/highres/")
+#buildall([16,16,1], False, "D:/openfoamData/newcodedata/lowres/")
