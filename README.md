@@ -43,11 +43,17 @@ After some experimentation and running the dambreak case at varying resolutions,
 
 Running simulations at high resolution also led me to realize that the problem I am trying to solve is fundamentally different from traditional image super-resolution. There is no direct correspondence between features, making this problem significantly more difficult.
 
+![48](readme_imgs/48_highres.gif)
+
+
+
 ##### A more efficient hybrid approach for neural net training and inference
 After running the openFOAM simulations at a higher resolution, I realized that in most cases, a significant amount of every frame had large areas of solid colors (completely air or completely water), and that a neural network shouldn't be needed to upscale these. I could simply use nearest-neighbor upscaling instead. This means that within a given frame, only a portion of it needs to be inferred by a neural network, which could drastically cut down on computation cost.
 
 I want the neural network to focus on "features", which are areas in frames where the water is interacting with the air. My approach to find these features was dividing each frame into smaller squares and removing those which
 exceed a certain threshold of water or air. The size of these squares is the "feature size", and the optimal feature size will be determined by experimentation.
+
+![patches](readme_imgs/featurePatches.png)
 
 ##### A major restructuring of code
 My utils.py file was becoming quite large and bulky, so I decided to organize all the functions into more specific files. There is also
@@ -65,7 +71,7 @@ Moving to a higher resolution also revealed a very interesting issue with OpenFO
 
 Here is the same 512x512 simulation at a slightly later time step.
 
-![512](readme_imgs/1-512x512x1-1.65.png)
+|![512](readme_imgs/1-512x512x1-1.65.png)|
 
 As you can see, the higher resolution simulation lags behind. I have confirmed that the two cases have the same initial conditions. After some experimentation, it seems that every case is affected. As you might imagine, this is quite a significant problem for this project. I am still trying to find the cause of this problem, as I do not have enough CFD knowledge to understand it.
 
