@@ -43,7 +43,7 @@ After some experimentation and running the dambreak case at varying resolutions,
 
 Running simulations at high resolution also led me to realize that the problem I am trying to solve is fundamentally different from traditional image super-resolution. There is no direct correspondence between features, making this problem significantly more difficult.
 
-![48](readme_imgs/48_highres.gif)
+<video src="https://i.imgur.com/KnEuS6M.mp4" width="1200" height="400" controls preload></video>
 
 
 
