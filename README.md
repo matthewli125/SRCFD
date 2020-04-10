@@ -2,9 +2,9 @@
 #### Matthew Li
 mwl5628@psu.edu
 
-Hello there! 
+Hello there!
 
-This repo contains all the components for a Super Resolution in Computation Fluid Dynamics project, with data processing as well as network training and testing. 
+This repo contains all the components for a Super Resolution in Computation Fluid Dynamics project, with data processing as well as network training and testing.
 
 CFD is very important in the field of engineering, but solving CFD problems can be very computationally
 intensive. It is a problem that cannot be easily scaled to more CPU or GPU cores making it very difficult to parallelize. This project proposes a novel method of solving CFD problems by applying a neural network super-resolution to lower resolution CFD simulations.
@@ -35,13 +35,47 @@ intensive. It is a problem that cannot be easily scaled to more CPU or GPU cores
 <a name="update"></a>
 ## Updates
 
+#### 4/9/2020
+My apologies for not updating this repository in quite a while! This project was on the backburner for some time, but this update will be quite substantial, as you can read below.
+
+##### A move to a much (much) higher resolution for simulations
+After some experimentation and running the dambreak case at varying resolutions, I came to the conclusion that running simulations at a substantially higher resolution (64x64->512x512) may provide better results. The higher resolution simulations have much more information, and I believe that may be key to creating better data for a neural network.
+
+Running simulations at high resolution also led me to realize that the problem I am trying to solve is fundamentally different from traditional image super-resolution. There is no direct correspondence between features, making this problem significantly more difficult.
+
+##### A more efficient hybrid approach for neural net training and inference
+After running the openFOAM simulations at a higher resolution, I realized that in most cases, a significant amount of every frame had large areas of solid colors (completely air or completely water), and that a neural network shouldn't be needed to upscale these. I could simply use nearest-neighbor upscaling instead. This means that within a given frame, only a portion of it needs to be inferred by a neural network, which could drastically cut down on computation cost.
+
+I want the neural network to focus on "features", which are areas in frames where the water is interacting with the air. My approach to find these features was dividing each frame into smaller squares and removing those which
+exceed a certain threshold of water or air. The size of these squares is the "feature size", and the optimal feature size will be determined by experimentation.
+
+##### A major restructuring of code
+My utils.py file was becoming quite large and bulky, so I decided to organize all the functions into more specific files. There is also
+a new file that sets all the relevant file paths based on the operating system. This restructuring should hopefully make this project
+easier to navigate through.
+
+##### Optimizing code using parallelism
+After writing some matrix functions, I realized that my code could benefit signicantly from parallelism. I used a python library called Numba, which can provide jit compilation using a decorator, as well as automatic parallel compilation. Comparing it to my non-compiled, non-parallel code, there is a significant improvement in speed, as you can see. However, an interesting thing to note is that the max, min, and avg functions don't seem to benefit from the parallel optimizations. These use numpy routines, and it has led to the conclusion that these numpy routines already execute in parallel.
+
+##### A time desynchronization problem
+Moving to a higher resolution also revealed a very interesting issue with OpenFOAM. To illustrate this problem, here is the same case at the same time step, with one at 256x256 resolution and the other at 512x512 resolution, rendered in ParaView.
+
+|![256](readme_imgs/1-256x256x1-1.45.png)|![512](readme_imgs/1-512x512x1-1.45.png)|
+|-|-|
+
+Here is the same 512x512 simulation at a slightly later time step.
+
+![512](readme_imgs/1-512x512x1-1.65.png)
+
+As you can see, the higher resolution simulation lags behind. I have confirmed that the two cases have the same initial conditions. After some experimentation, it seems that every case is affected. As you might imagine, this is quite a significant problem for this project. I am still trying to find the cause of this problem, as I do not have enough CFD knowledge to understand it.
+
 #### 7/20/2019
 3D dambreak work put on hold due to extremely long execution time and unexpected and unexplainable fluid behavior. Extending blocks in Z direction may not be sufficient to make the sim 3D.
 
 Began working on "over time" SRCFD. I theorized that feeding a neural network multiple frames of data at a time may produce better results, since multiple frames may allow a NN to extrapolate more information about the fluid's general behavior. A
 plot of such a 3D array will be attached below.
 
-I am also interested in 3D-printing a model of such a fluid sim over time as a neat visualization of my work. I need to convert a numpy voxel grid to an STL compatible mesh. I used the marching cubes algorithm from SKlearn and got this as a 
+I am also interested in 3D-printing a model of such a fluid sim over time as a neat visualization of my work. I need to convert a numpy voxel grid to an STL compatible mesh. I used the marching cubes algorithm from SKlearn and got this as a
 result. I think it looks quite neat but I feel like not having cubes makes it lose the sense of "resolution". Will experiment further.
 
 |![voxels](readme_imgs/voxel.png)|![mesh](readme_imgs/mesh.png)|
