@@ -63,7 +63,8 @@ easier to navigate through and use.
 ##### Optimizing code using parallelism
 After writing some matrix functions, I realized that my code could benefit signicantly from parallelism. I used a python library called Numba, which can provide jit compilation using a decorator, as well as automatic parallel compilation. Comparing it to my non-compiled, non-parallel code, there is a significant improvement in speed, as you can see. However, an interesting thing to note is that the max, min, and avg functions don't seem to benefit from the parallel optimizations. These use numpy routines, and it has led to the conclusion that these numpy routines already execute in parallel.
 
-<img src="https://cdn.dribbble.com/users/915978/screenshots/3034118/numba.jpg", width="100" height="100" title="Numba logo">
+<img src="readme_imgs/numba.jpg" width="150" height="150">
+![benchmarks](readme_imgs/matrixBenchmarks.png
 
 ##### A time desynchronization problem
 Moving to a higher resolution also revealed a very interesting issue with OpenFOAM. To illustrate this problem, here is the same case at the same time step, with one at 256x256 resolution and the other at 512x512 resolution, rendered in ParaView.
