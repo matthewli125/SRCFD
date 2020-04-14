@@ -51,7 +51,7 @@ https://i.imgur.com/KnEuS6M.gif
 After running the openFOAM simulations at a higher resolution, I realized that in most cases, a significant amount of every frame had large areas of solid colors (completely air or completely water), and that a neural network shouldn't be needed to upscale these. I could simply use nearest-neighbor upscaling instead. This means that within a given frame, only a portion of it needs to be inferred by a neural network, which could drastically cut down on computation cost.
 
 I want the neural network to focus on "features", which are areas in frames where the water is interacting with the air. My approach to find these features was dividing each frame into smaller squares and removing those which
-exceed a certain threshold of water or air. The size of these squares is the "feature size", and the optimal feature size will be determined by experimentation.
+exceed a certain threshold of water or air. The size of these squares is the "feature size", and the optimal feature size will be determined by experimentation. (Note: the small blank square at the bottom in the middle is the dam)
 
 ![patches](readme_imgs/featurePatches.png)
 
@@ -64,7 +64,7 @@ easier to navigate through and use.
 After writing some matrix functions, I realized that my code could benefit signicantly from parallelism. I used a python library called Numba, which can provide jit compilation using a decorator, as well as automatic parallel compilation. Comparing it to my non-compiled, non-parallel code, there is a significant improvement in speed, as you can see. However, an interesting thing to note is that the max, min, and avg functions don't seem to benefit from the parallel optimizations. These use numpy routines, and it has led to the conclusion that these numpy routines already execute in parallel.
 
 <img src="readme_imgs/numba.jpg" width="150" height="150">
-![benchmarks](readme_imgs/matrixBenchmarks.png
+![benchmarks](readme_imgs/matrixBenchmarks.png)
 
 ##### A time desynchronization problem
 Moving to a higher resolution also revealed a very interesting issue with OpenFOAM. To illustrate this problem, here is the same case at the same time step, with one at 256x256 resolution and the other at 512x512 resolution, rendered in ParaView.
