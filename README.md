@@ -43,7 +43,7 @@ After some experimentation and running the dambreak case at varying resolutions,
 
 Running simulations at high resolution also led me to realize that the problem I am trying to solve is fundamentally different from traditional image super-resolution. There is no direct correspondence between features, making this problem significantly more difficult.
 
-<video src="https://i.imgur.com/KnEuS6M.mp4" width="1200" height="400" controls preload></video>
+https://i.imgur.com/KnEuS6M.gif
 
 
 
@@ -58,10 +58,12 @@ exceed a certain threshold of water or air. The size of these squares is the "fe
 ##### A major restructuring of code
 My utils.py file was becoming quite large and bulky, so I decided to organize all the functions into more specific files. There is also
 a new file that sets all the relevant file paths based on the operating system. This restructuring should hopefully make this project
-easier to navigate through.
+easier to navigate through and use.
 
 ##### Optimizing code using parallelism
 After writing some matrix functions, I realized that my code could benefit signicantly from parallelism. I used a python library called Numba, which can provide jit compilation using a decorator, as well as automatic parallel compilation. Comparing it to my non-compiled, non-parallel code, there is a significant improvement in speed, as you can see. However, an interesting thing to note is that the max, min, and avg functions don't seem to benefit from the parallel optimizations. These use numpy routines, and it has led to the conclusion that these numpy routines already execute in parallel.
+
+<img src="https://cdn.dribbble.com/users/915978/screenshots/3034118/numba.jpg", width="100" height="100" title="Numba logo">
 
 ##### A time desynchronization problem
 Moving to a higher resolution also revealed a very interesting issue with OpenFOAM. To illustrate this problem, here is the same case at the same time step, with one at 256x256 resolution and the other at 512x512 resolution, rendered in ParaView.
@@ -71,7 +73,7 @@ Moving to a higher resolution also revealed a very interesting issue with OpenFO
 
 Here is the same 512x512 simulation at a slightly later time step.
 
-|![512](readme_imgs/1-512x512x1-1.65.png)|
+<img src="readme_imgs/1-512x512x1-1.65.png" width = "450" height = "450">
 
 As you can see, the higher resolution simulation lags behind. I have confirmed that the two cases have the same initial conditions. After some experimentation, it seems that every case is affected. As you might imagine, this is quite a significant problem for this project. I am still trying to find the cause of this problem, as I do not have enough CFD knowledge to understand it.
 
