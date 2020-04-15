@@ -1,6 +1,6 @@
 # Utilities
 
-This folder contains pieces of code I wrote to help me at various stages in the project. Each file will ahve comments, but
+This folder contains pieces of code I wrote to help me at various stages in the project. Each file will have comments, but
 additional information will be in this readme as well. First, I will explain some details about the structure of the project.
 <br>
 <br>
