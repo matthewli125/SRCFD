@@ -35,6 +35,10 @@ intensive. It is a problem that cannot be easily scaled to more CPU or GPU cores
 <a name="update"></a>
 ## Updates
 
+
+#### 7/4/2021
+This project has progressed a long way since the last update. I experimented with a GAN network, and it produced fantastic results. My honors thesis on this exact project can be found at this link: https://honors.libraries.psu.edu/catalog/7391mwl5628. I modified and adapted the code from this repository by Deepak Birla: https://github.com/deepak112/Keras-SRGAN.
+
 #### 4/9/2020
 My apologies for not updating this repository in quite a while! This project was on the backburner for some time, but this update will be quite substantial, as you can read below.
 
